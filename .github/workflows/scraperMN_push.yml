@@ -47,13 +47,20 @@ jobs:
     - name: Set permissions
       run: chmod +x ./chrome-linux/chrome/google-chrome
 
+    - name: 'Log in to Azure with AZ CLI'
+      uses: azure/login@v2
+      with:
+        client-id: ${{ vars.AZURE_CLIENT_ID }} # Required to log in with OIDC
+        tenant-id: ${{ vars.AZURE_TENANT_ID }} # Required to log in with OIDC
+        subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }} # Required to log in with OIDC
+
     - name: 'Run Azure Functions Action'
       uses: Azure/functions-action@v1
       id: fa
       with:
         app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
         package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
-        publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
+        # publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
         sku: flexconsumption
 
 # For more samples to get started with GitHub Action workflows to deploy to Azure, refer to https://github.com/Azure/actions-workflow-samples
