@@ -1,48 +1,27 @@
-// import puppeteer from 'puppeteer';
-import puppeteer from 'puppeteer-core';
+import puppeteer from 'puppeteer';
+// import puppeteer from 'puppeteer-core';
 // import chromium from "@sparticuz/chromium";
-// import { app } from '@azure/functions';
-import express from 'express';
-import locateChrome from 'locate-chrome';
+import { app } from '@azure/functions';
 
-// App constants
-const host = "::" // listen to all IPs both IPv4 and IPv6
-let port = parseInt(process.env.PORT) || 3000;
+app.http('scraperMN', {
+    methods: ['POST'],
+    authLevel: 'anonymous',
+    handler: async (request, context) => {
+        context.log(`Http function processed request for url "${request.url}"`);
+        const { username, password, project, name, lastname_1, lastname_2, type_intervention, date, type_event, event_caracter, responsible, description } = request.params;
+        
+        // context.log(request);
+        // context.log(request.params);
+        // context.log(username, password, project, name, lastname_1, lastname_2, type_intervention, date, type_event, event_caracter, responsible, description);
 
-const app = express();
+        const url = 'https://www.sis.mejorninez.cl/';
+        context.log('Pase por aca')
+        const result = await scraper(context, url, username, password, project, name, lastname_1, lastname_2, type_intervention, date, type_event, event_caracter, responsible, description);
 
-// module.exports = async function (request, context) {
-//     // console.log(`Http function processed request for url "${request.url}"`);
-//     const { username, password, project, name, lastname_1, lastname_2, type_intervention, date, type_event, event_caracter, responsible, description } = request.params;
-    
-//     // console.log(request);
-//     // console.log(request.params);
-//     // console.log(username, password, project, name, lastname_1, lastname_2, type_intervention, date, type_event, event_caracter, responsible, description);
+        return result;
 
-//     const url = 'https://www.sis.mejorninez.cl/';
-//     // console.log('Pase por aca')
-//     const result = await scraper(context, url, username, password, project, name, lastname_1, lastname_2, type_intervention, date, type_event, event_caracter, responsible, description);
-
-//     return result;
-
-//     // res.send('Data received successfully!');
-// };
-
-app.post('/', async (request, context) => {
-    // console.log(`Http function processed request for url "${request.url}"`);
-    const { username, password, project, name, lastname_1, lastname_2, type_intervention, date, type_event, event_caracter, responsible, description } = request.params;
-    
-    // console.log(request);
-    // console.log(request.params);
-    // console.log(username, password, project, name, lastname_1, lastname_2, type_intervention, date, type_event, event_caracter, responsible, description);
-
-    const url = 'https://www.sis.mejorninez.cl/';
-    // console.log('Pase por aca')
-    const result = await scraper(context, url, username, password, project, name, lastname_1, lastname_2, type_intervention, date, type_event, event_caracter, responsible, description);
-
-    return result;
-
-    // res.send('Data received successfully!');
+        // res.send('Data received successfully!');
+    }
 });
 
 async function setUpPageDefaults(page) {
@@ -83,8 +62,9 @@ async function scraper(context, url, username, password, project, name, lastname
     let browser;
 
     try{
+        // const path = "/opt/homebrew/bin/chromium";
         // const path = await chromium.executablePath();
-        const path = '../../chromium/bin/x64/chromium';
+        const path = './chrome-linux/chrome/google-chrome';
         // context.log(path);
         browser = await puppeteer.launch({
         headless: false,
@@ -281,4 +261,3 @@ async function scraper(context, url, username, password, project, name, lastname
         } 
     }
 };
-
