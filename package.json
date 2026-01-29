@@ -1,0 +1,19 @@
+{
+  "name": "docker-scraper",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "npm start",
+    "dev": "npm run build && npm start",
+    "build": "npm init"
+  },
+  "dependencies": {
+    "@sparticuz/chromium": "^143.0.0",
+    "aes-js": "^3.1.2",
+    "express": "^5.1.0",
+    "locate-chrome": "^0.1.1",
+    "puppeteer": "^24.34.0",
+    "puppeteer-core": "^24.30.0"
+  },
+  "main": "index.js"
+}
